@@ -2,7 +2,7 @@
 
 An institutional-grade, responsive Forex position size, risk management, and live pip valuation web application built with React 19, TypeScript, and Tailwind CSS.
 
-![Von Pips FX Dashboard Preview](https://raw.githubusercontent.com/4von/von-pips-fx/main/preview.png)
+![Von Pips FX Dashboard Preview](https://github.com/4von/Von-pips-fx/blob/main/public/og-image.png)
 
 
 ---
