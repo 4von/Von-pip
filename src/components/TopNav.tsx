@@ -6,9 +6,21 @@ interface TopNavProps {
   onReset: () => void;
   onSelectPair: (symbol: string) => void;
   currentPair: CurrencyPair;
+  eurUsdPip: number;
+  xauUsdPip: number;
+  usdJpyPip: number;
+  pipMode: string;
 }
 
-export const TopNav: React.FC<TopNavProps> = ({ onReset, onSelectPair, currentPair }) => {
+export const TopNav: React.FC<TopNavProps> = ({
+  onReset,
+  onSelectPair,
+  currentPair,
+  eurUsdPip,
+  xauUsdPip,
+  usdJpyPip,
+  pipMode,
+}) => {
   return (
     <header className="w-full border-b border-slate-800/80 bg-[#080e1d]/90 backdrop-blur-md sticky top-0 z-50 px-4 lg:px-8 py-3.5">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
@@ -42,7 +54,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onReset, onSelectPair, currentPa
           >
             <span className="font-semibold text-slate-300">EUR/USD</span>
             <span className="text-white">1.0842</span>
-            <span className="text-emerald-400 font-medium">+$10.00/pip</span>
+            <span className="text-emerald-400 font-medium">${eurUsdPip.toFixed(2)}/pip</span>
           </button>
 
           <button
@@ -56,7 +68,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onReset, onSelectPair, currentPa
           >
             <span className="font-semibold text-slate-300">XAU/USD</span>
             <span className="text-amber-300 font-bold">2,382.40</span>
-            <span className="text-cyan-400 font-medium">$10.00/pip</span>
+            <span className="text-cyan-400 font-medium">${xauUsdPip.toFixed(2)}/pip</span>
           </button>
 
           <button
@@ -70,7 +82,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onReset, onSelectPair, currentPa
           >
             <span className="font-semibold text-slate-300">USD/JPY</span>
             <span className="text-white">155.80</span>
-            <span className="text-cyan-400 font-medium">~$6.70/pip</span>
+            <span className="text-cyan-400 font-medium">${usdJpyPip.toFixed(2)}/pip</span>
           </button>
         </div>
 

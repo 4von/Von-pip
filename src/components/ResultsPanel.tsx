@@ -216,11 +216,26 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           </div>
 
           <div className="flex justify-between items-center py-0.5">
-            <span className="text-slate-400">Pip Value / Std Lot:</span>
+            <span className="text-slate-400 flex items-center gap-1.5">
+              <span>Pip Value / Std Lot:</span>
+              <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border uppercase ${
+                calc.pipMode === 'live'
+                  ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-400'
+                  : 'bg-slate-800 border-slate-700 text-slate-400'
+              }`}>
+                {calc.pipMode === 'live' ? 'Live Price' : 'Standard'}
+              </span>
+            </span>
             <span className="text-cyan-400 font-bold">
               ${calc.pipValue.toFixed(2)}
             </span>
           </div>
+
+          {calc.pipFormulaNote && (
+            <div className="text-[11px] text-slate-400 font-sans italic px-2 py-1 bg-[#070c18] rounded border border-slate-800/80">
+              {calc.pipFormulaNote}
+            </div>
+          )}
 
           <div className="pt-2 border-t border-slate-800/80 space-y-2">
             <div>

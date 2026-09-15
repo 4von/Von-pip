@@ -8,6 +8,8 @@ interface TradeParametersProps {
   setBalance: (val: number) => void;
   selectedPair: CurrencyPair;
   setSelectedPair: (pair: CurrencyPair) => void;
+  effectivePipValue: number;
+  isLivePipMode: boolean;
   riskType: RiskType;
   setRiskType: (type: RiskType) => void;
   riskPercentage: number;
@@ -27,6 +29,8 @@ export const TradeParameters: React.FC<TradeParametersProps> = ({
   setBalance,
   selectedPair,
   setSelectedPair,
+  effectivePipValue,
+  isLivePipMode,
   riskType,
   setRiskType,
   riskPercentage,
@@ -145,8 +149,13 @@ export const TradeParameters: React.FC<TradeParametersProps> = ({
                 <label htmlFor="currency-pair-select" className="block text-xs font-semibold tracking-wider text-slate-400 uppercase">
                   Currency Pair / Asset
                 </label>
-                <span className="text-[11px] font-mono-num font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-500/40 px-2 py-0.5 rounded-md">
-                  ${selectedPair.pipValue.toFixed(2)}/PIP
+                <span className="text-[11px] font-mono-num font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-500/40 px-2 py-0.5 rounded-md flex items-center gap-1.5">
+                  <span>${effectivePipValue.toFixed(2)}/PIP</span>
+                  {isLivePipMode && (
+                    <span className="text-[9px] text-emerald-400 uppercase font-black tracking-wider bg-emerald-950 px-1 py-0.2 rounded border border-emerald-500/40">
+                      LIVE
+                    </span>
+                  )}
                 </span>
               </div>
               <div className="relative">

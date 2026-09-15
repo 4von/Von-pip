@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { TopNav } from './components/TopNav';
 import { TradeParameters } from './components/TradeParameters';
 import { ResultsPanel } from './components/ResultsPanel';
 import { PipReferenceTable } from './components/PipReferenceTable';
+import { LiveRateStatus } from './components/LiveRateStatus';
 import { CURRENCY_PAIRS } from './data/currencyPairs';
-import { CurrencyPair, RiskType, TradeCalculation } from './types';
+import { CurrencyPair, RiskType, PipMode, TradeCalculation } from './types';
+import { calculatePipValueInUSD, fetchLiveExchangeRates, DEFAULT_USD_RATES } from './utils/pipCalculator';
 
 export default function App() {
   // Default values matching the screenshot
@@ -16,6 +18,54 @@ export default function App() {
   const [stopLossPips, setStopLossPips] = useState<number>(25.0);
   const [takeProfitPips, setTakeProfitPips] = useState<number>(50.0);
   const [isCalculatedFlash, setIsCalculatedFlash] = useState<boolean>(false);
+
+  // Live Exchange Rate State
+  const [pipMode, setPipMode] = useState<PipMode>('live');
+  const [rates, setRates] = useState<Record<string, number>>(DEFAULT_USD_RATES);
+  const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
+  const [lastUpdatedRates, setLastUpdatedRates] = useState<Date | null>(new Date());
+  const [rateSource, setRateSource] = useState<'live_api' | 'benchmark' | 'custom'>('live_api');
+
+  // Load live rates on mount
+  const refreshRates = useCallback(async () => {
+    setIsLoadingRates(true);
+    const result = await fetchLiveExchangeRates();
+    setRates(result.rates);
+    setLastUpdatedRates(result.lastUpdated);
+    setRateSource(result.source);
+    setIsLoadingRates(false);
+  }, []);
+
+  useEffect(() => {
+    refreshRates();
+  }, [refreshRates]);
+
+  // Helper to compute pip value for any pair based on current pipMode & rates
+  const getPipValueForPair = useCallback((pair: CurrencyPair) => {
+    if (pipMode === 'standard') {
+      return {
+        pipValue: pair.pipValue,
+        isFixedUSD: pair.quoteCurrency === 'USD',
+        formula: 'Standard institutional benchmark',
+      };
+    }
+    const calculation = calculatePipValueInUSD(
+      pair.quoteCurrency,
+      pair.baseCurrency,
+      pair.isCommodity,
+      rates
+    );
+    return {
+      pipValue: calculation.pipValue,
+      isFixedUSD: calculation.isFixedUSD,
+      formula: calculation.formula,
+    };
+  }, [pipMode, rates]);
+
+  // Active pair's computed pip value
+  const activePipInfo = useMemo(() => {
+    return getPipValueForPair(selectedPair);
+  }, [getPipValueForPair, selectedPair]);
 
   // Synchronize cash & percentage gracefully when toggling
   const handleRiskTypeChange = (newType: RiskType) => {
@@ -53,7 +103,7 @@ export default function App() {
         : 'Risk cash amount must be greater than $0.00';
     }
 
-    const pipVal = selectedPair.pipValue;
+    const pipVal = activePipInfo.pipValue;
     let cashRisk = 0;
     let effRiskPct = 0;
 
@@ -102,6 +152,9 @@ export default function App() {
       stopLossPips,
       takeProfitPips,
       pipValue: pipVal,
+      pipMode,
+      pipFormulaNote: activePipInfo.formula,
+      isFixedUSD: activePipInfo.isFixedUSD,
       lotSize: roundedLotSize,
       miniLots: Math.max(0, miniLots),
       microLots: Math.max(0, microLots),
@@ -113,7 +166,7 @@ export default function App() {
       error,
       formulaStep,
     };
-  }, [balance, selectedPair, riskType, riskPercentage, riskCash, stopLossPips, takeProfitPips]);
+  }, [balance, selectedPair, riskType, riskPercentage, riskCash, stopLossPips, takeProfitPips, activePipInfo, pipMode]);
 
   // Flash highlight on click of Instant Calculate
   const triggerCalculate = () => {
@@ -146,6 +199,10 @@ export default function App() {
         onReset={handleReset}
         onSelectPair={handleSelectPairBySymbol}
         currentPair={selectedPair}
+        eurUsdPip={getPipValueForPair(CURRENCY_PAIRS[0]).pipValue}
+        xauUsdPip={getPipValueForPair(CURRENCY_PAIRS[4] ?? CURRENCY_PAIRS[0]).pipValue}
+        usdJpyPip={getPipValueForPair(CURRENCY_PAIRS[2]).pipValue}
+        pipMode={pipMode}
       />
 
       {/* Main Content Area */}
@@ -161,6 +218,20 @@ export default function App() {
           </p>
         </div>
 
+        {/* Live Market Pip Price Toggle & Status Bar */}
+        <LiveRateStatus
+          pipMode={pipMode}
+          setPipMode={setPipMode}
+          isLoadingRates={isLoadingRates}
+          onRefreshRates={refreshRates}
+          lastUpdated={lastUpdatedRates}
+          rateSource={rateSource}
+          currentPipValue={activePipInfo.pipValue}
+          isFixedUSD={activePipInfo.isFixedUSD}
+          quoteCurrency={selectedPair.quoteCurrency}
+          formulaNote={activePipInfo.formula}
+        />
+
         {/* 2-Column Primary Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
@@ -171,6 +242,8 @@ export default function App() {
               setBalance={setBalance}
               selectedPair={selectedPair}
               setSelectedPair={setSelectedPair}
+              effectivePipValue={activePipInfo.pipValue}
+              isLivePipMode={pipMode === 'live'}
               riskType={riskType}
               setRiskType={handleRiskTypeChange}
               riskPercentage={riskPercentage}
@@ -197,11 +270,14 @@ export default function App() {
 
         </div>
 
-        {/* Bottom Section: Standard Pip Value Reference Table */}
+        {/* Bottom Section: Standard / Live Pip Value Reference Table */}
         <div className="w-full">
           <PipReferenceTable
             selectedPair={selectedPair}
             onSelectPair={setSelectedPair}
+            pipMode={pipMode}
+            rates={rates}
+            getPipValueForPair={getPipValueForPair}
           />
         </div>
 

@@ -1,4 +1,5 @@
 export type RiskType = 'percentage' | 'cash';
+export type PipMode = 'live' | 'standard';
 
 export interface CurrencyPair {
   id: string;
@@ -24,6 +25,9 @@ export interface TradeCalculation {
   stopLossPips: number;
   takeProfitPips: number;
   pipValue: number;
+  pipMode: PipMode;
+  pipFormulaNote: string;
+  isFixedUSD: boolean;
   lotSize: number;
   miniLots: number;
   microLots: number;
