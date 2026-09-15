@@ -12,6 +12,8 @@ An institutional-grade, responsive Forex position size, risk management, and liv
 **Von Pips FX** helps retail and proprietary traders eliminate calculation errors and prevent capital drawdowns by calculating exact position lot sizes, monetary gains, and risk-to-reward ratios before opening orders in MetaTrader 4/5, TradingView, or cTrader.
 
 The engine accounts for live exchange rates, varying contract sizes, decimal pipettes, and quote currency conversions across 17 major currency pairs and commodities.
+
+
                                     <a href="https://trendshift.io/repositories/28176?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-28176" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/28176" alt="debpalash%2FVoiceStudio | Trendshift" width="250" height="55"/></a>
 ---
 
