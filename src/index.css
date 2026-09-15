@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    background-color: #060b17;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+}
+
+.font-mono-num {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Neon glow classes */
+.glow-cyan {
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35), 0 0 10px -2px rgba(6, 182, 212, 0.2);
+}
+
+.glow-cyan-sm {
+  box-shadow: 0 0 12px -2px rgba(6, 182, 212, 0.25);
+}
+
+.glow-teal-btn {
+  box-shadow: 0 0 25px -4px rgba(20, 184, 166, 0.4), 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+.glow-badge {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Hide spin buttons on number inputs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080e1c;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

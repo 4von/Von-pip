@@ -1,0 +1,6 @@
+{
+  "name": "Von Pips FX - Position Size & Risk Calculator",
+  "description": "Forex position size and risk calculator featuring account risk parameters, Take Profit targets, monetary gain calculations, and real-time risk-to-reward ratio analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
