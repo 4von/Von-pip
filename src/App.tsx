@@ -87,6 +87,9 @@ export default function App() {
     if (balance <= 0) {
       isValid = false;
       error = 'Account balance must be greater than $0.00';
+    } else if (balance > 1000000) {
+      isValid = false;
+      error = 'Account balance cannot exceed $1,000,000 USD';
     } else if (stopLossPips <= 0) {
       isValid = false;
       error = 'Stop loss must be greater than 0 pips';

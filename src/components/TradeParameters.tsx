@@ -44,7 +44,7 @@ export const TradeParameters: React.FC<TradeParametersProps> = ({
   onCalculateTrigger,
   validationError,
 }) => {
-  const balancePresets = [5000, 10000, 25000, 100000];
+  const balancePresets = [10000, 50000, 100000, 250000, 1000000];
   const percentPresets = [0.5, 1.0, 2.0, 3.0];
   const cashPresets = [50, 100, 250, 500];
   const slPresets = [10, 15, 25, 40, 50];
@@ -103,15 +103,21 @@ export const TradeParameters: React.FC<TradeParametersProps> = ({
             
             {/* Account Balance */}
             <div>
-              <label htmlFor="account-balance-input" className="block text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">
-                Account Balance ($)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="account-balance-input" className="block text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                  Account Balance ($)
+                </label>
+                <span className="text-[11px] font-mono-num text-slate-400">
+                  Max: <strong className="text-cyan-400 font-bold">$1,000,000</strong>
+                </span>
+              </div>
               <div className="relative flex items-center bg-[#070c18] border border-slate-700/80 hover:border-cyan-500/50 focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-500/20 rounded-xl px-3.5 py-2.5 transition-all">
                 <span className="text-slate-400 font-mono-num text-base mr-2">$</span>
                 <input
                   id="account-balance-input"
                   type="number"
                   min="0"
+                  max="1000000"
                   step="any"
                   value={balance === 0 ? '' : balance}
                   onChange={handleBalanceChange}
@@ -137,7 +143,7 @@ export const TradeParameters: React.FC<TradeParametersProps> = ({
                         : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
                     }`}
                   >
-                    ${val >= 1000 ? `${val / 1000}k` : val}
+                    {val >= 1000000 ? '$1M' : val >= 1000 ? `$${val / 1000}k` : `$${val}`}
                   </button>
                 ))}
               </div>
