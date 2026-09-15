@@ -4,6 +4,7 @@ An institutional-grade, responsive Forex position size, risk management, and liv
 
 ![Von Pips FX Dashboard Preview](https://raw.githubusercontent.com/4von/von-pips-fx/main/preview.png)
 
+<a href="https://trendshift.io/repositories/28176?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-28176" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/28176" alt="debpalash%2FVoiceStudio | Trendshift" width="250" height="55"/></a>
 ---
 
 ## 🚀 Overview
