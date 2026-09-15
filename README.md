@@ -14,7 +14,8 @@ An institutional-grade, responsive Forex position size, risk management, and liv
 The engine accounts for live exchange rates, varying contract sizes, decimal pipettes, and quote currency conversions across 17 major currency pairs and commodities.
 
 
-                                    <a href="https://trendshift.io/repositories/28176?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-28176" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/28176" alt="debpalash%2FVoiceStudio | Trendshift" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/28176?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-28176" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/28176" alt="debpalash%2FVoiceStudio | Trendshift" width="250" height="55"/></a>
+
 ---
 
 ## ⚡ Key Features
