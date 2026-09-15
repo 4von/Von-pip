@@ -4,23 +4,51 @@ import { TradeParameters } from './components/TradeParameters';
 import { ResultsPanel } from './components/ResultsPanel';
 import { PipReferenceTable } from './components/PipReferenceTable';
 import { LiveRateStatus } from './components/LiveRateStatus';
+import { PipEducation } from './components/PipEducation';
 import { CURRENCY_PAIRS } from './data/currencyPairs';
 import { CurrencyPair, RiskType, PipMode, TradeCalculation } from './types';
 import { calculatePipValueInUSD, fetchLiveExchangeRates, DEFAULT_USD_RATES } from './utils/pipCalculator';
 
+// Remembers the trader's last-used inputs across visits (per-browser convenience only).
+const SETTINGS_STORAGE_KEY = 'von-pips-fx:settings';
+
+interface StoredSettings {
+  balance: number;
+  pairSymbol: string;
+  riskType: RiskType;
+  riskPercentage: number;
+  riskCash: number;
+  stopLossPips: number;
+  takeProfitPips: number;
+  pipMode: PipMode;
+}
+
+function loadStoredSettings(): Partial<StoredSettings> {
+  try {
+    const raw = window.localStorage.getItem(SETTINGS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+const storedSettings = loadStoredSettings();
+
 export default function App() {
-  // Default values matching the screenshot
-  const [balance, setBalance] = useState<number>(10000);
-  const [selectedPair, setSelectedPair] = useState<CurrencyPair>(CURRENCY_PAIRS[0]); // EUR/USD
-  const [riskType, setRiskType] = useState<RiskType>('percentage');
-  const [riskPercentage, setRiskPercentage] = useState<number>(1.0);
-  const [riskCash, setRiskCash] = useState<number>(100);
-  const [stopLossPips, setStopLossPips] = useState<number>(25.0);
-  const [takeProfitPips, setTakeProfitPips] = useState<number>(50.0);
+  // Default values matching the screenshot, overridden by any previously saved settings
+  const [balance, setBalance] = useState<number>(storedSettings.balance ?? 10000);
+  const [selectedPair, setSelectedPair] = useState<CurrencyPair>(
+    CURRENCY_PAIRS.find((p) => p.symbol === storedSettings.pairSymbol) ?? CURRENCY_PAIRS[0]
+  );
+  const [riskType, setRiskType] = useState<RiskType>(storedSettings.riskType ?? 'percentage');
+  const [riskPercentage, setRiskPercentage] = useState<number>(storedSettings.riskPercentage ?? 1.0);
+  const [riskCash, setRiskCash] = useState<number>(storedSettings.riskCash ?? 100);
+  const [stopLossPips, setStopLossPips] = useState<number>(storedSettings.stopLossPips ?? 25.0);
+  const [takeProfitPips, setTakeProfitPips] = useState<number>(storedSettings.takeProfitPips ?? 50.0);
   const [isCalculatedFlash, setIsCalculatedFlash] = useState<boolean>(false);
 
   // Live Exchange Rate State
-  const [pipMode, setPipMode] = useState<PipMode>('live');
+  const [pipMode, setPipMode] = useState<PipMode>(storedSettings.pipMode ?? 'live');
   const [rates, setRates] = useState<Record<string, number>>(DEFAULT_USD_RATES);
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
   const [lastUpdatedRates, setLastUpdatedRates] = useState<Date | null>(new Date());
@@ -39,6 +67,25 @@ export default function App() {
   useEffect(() => {
     refreshRates();
   }, [refreshRates]);
+
+  // Persist the trader's inputs so they survive a page reload
+  useEffect(() => {
+    try {
+      const settings: StoredSettings = {
+        balance,
+        pairSymbol: selectedPair.symbol,
+        riskType,
+        riskPercentage,
+        riskCash,
+        stopLossPips,
+        takeProfitPips,
+        pipMode,
+      };
+      window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // localStorage unavailable (private browsing / quota) - safe to ignore
+    }
+  }, [balance, selectedPair, riskType, riskPercentage, riskCash, stopLossPips, takeProfitPips, pipMode]);
 
   // Helper to compute pip value for any pair based on current pipMode & rates
   const getPipValueForPair = useCallback((pair: CurrencyPair) => {
@@ -282,6 +329,11 @@ export default function App() {
             rates={rates}
             getPipValueForPair={getPipValueForPair}
           />
+        </div>
+
+        {/* Educational Section: Pip & Position Sizing Explainer */}
+        <div className="w-full">
+          <PipEducation />
         </div>
 
       </main>
