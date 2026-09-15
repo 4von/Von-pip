@@ -2,7 +2,7 @@
 
 An institutional-grade, responsive Forex position size, risk management, and live pip valuation web application built with React 19, TypeScript, and Tailwind CSS.
 
-![Von Pips FX Dashboard Preview](https://raw.githubusercontent.com/mrisvon/von-pips-fx/main/preview.png)
+![Von Pips FX Dashboard Preview](https://raw.githubusercontent.com/4von/von-pips-fx/main/preview.png)
 
 ---
 
@@ -112,8 +112,8 @@ npm -v
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mrisvon/von-pips-fx.git
-   cd von-pips-fx
+   git clone https://github.com/4von/Von-pips-fx.git
+   cd Von-pips-fx
    ```
 
 2. Install project dependencies:
